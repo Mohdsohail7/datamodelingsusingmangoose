@@ -1,19 +1,22 @@
 {
-  "name": "mangoosedatamodelings",
+  "name": "mongoosedatamodelings",
   "version": "1.0.0",
-  "description": "in this project i learn how to create data model using mangoose",
+  "description": "in this project i learn how to create data model using mongoose",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mohdsohail7/datamodelingsusingmangoose.git"
+    "url": "git+https://github.com/Mohdsohail7/datamodelingsusingmongoose.git"
   },
   "author": "Mohd Sohail",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Mohdsohail7/datamodelingsusingmangoose/issues"
+    "url": "https://github.com/Mohdsohail7/datamodelingsusingmongoose/issues"
   },
-  "homepage": "https://github.com/Mohdsohail7/datamodelingsusingmangoose#readme"
+  "homepage": "https://github.com/Mohdsohail7/datamodelingsusingmongoose#readme",
+  "dependencies": {
+    "mongoose": "^8.9.2"
+  }
 }
