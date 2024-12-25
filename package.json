@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Mohdsohail7/datamodelingsusingmongoose#readme",
   "dependencies": {
+    "dotenv": "^16.4.7",
     "mongoose": "^8.9.2"
   }
 }
