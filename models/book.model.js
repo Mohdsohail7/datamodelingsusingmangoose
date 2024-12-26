@@ -16,7 +16,7 @@ const bookSchema = new mongoose.Schema({
     },
     genre: [{
         type: String,
-        enum: ["Fiction", "Fiction", "Mystery", "Thriller", "Science Fiction", "Fantasy", "Romance", "Historical", "Biography", "Self-help", "Other"]
+        enum: ["Fiction", "Non-Fiction", "Mystery", "Thriller", "Science Fiction", "Fantasy", "Romance", "Historical", "Biography", "Self-help", "Other"]
     }],
     language: {
         type: String,
@@ -33,9 +33,7 @@ const bookSchema = new mongoose.Schema({
         default: 0
     },
     summary: String,
-    awards: [{type: String}],
     coverImageUrl: String,
-    purchaseUrl: String,
 },
 {
     timestamps: true
