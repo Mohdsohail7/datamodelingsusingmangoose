@@ -1,19 +1,21 @@
 const { dbConnect } = require("./db/db.connect");
-const fs = require("fs");
+// const fs = require("fs");
 const Movie = require("./models/movie.model");
 const User = require("./models/userprofile.model");
 const Book = require("./models/book.model");
+const Restaurant = require("./models/restaurants.model");
+const Hotel = require("./models/hotel.model");
 
 dbConnect();
 
-const jsonData = fs.readFileSync("movies.json", "utf-8");
-const moviesData = JSON.parse(jsonData);
+// const jsonData = fs.readFileSync("movies.json", "utf-8");
+// const moviesData = JSON.parse(jsonData);
 
-const userJsonData = fs.readFileSync("users.json", "utf-8");
-const usersData = JSON.parse(userJsonData);
+// const userJsonData = fs.readFileSync("users.json", "utf-8");
+// const usersData = JSON.parse(userJsonData);
 
-const bookJsonData = fs.readFileSync("books.json", "utf-8");
-const booksData = JSON.parse(bookJsonData);
+// const bookJsonData = fs.readFileSync("books.json", "utf-8");
+// const booksData = JSON.parse(bookJsonData);
 
 async function seedData() {
     try {
@@ -90,4 +92,62 @@ async function bookDataSeed() {
         console.log("Error from seeding data in database", error);
     }
 }
-bookDataSeed();
+// bookDataSeed();
+
+const newRestaurant = {
+    name: 'Cha Cha',
+    cuisine: ['Spanish'],
+    location: '123 Main Street, Anytown',
+    rating: 4.0,
+    website: 'https://example.com',
+    phoneNumber: '+1234567890',
+    openHours: 'Mon-Sun: 11:00 AM - 10:00 PM',
+    priceRange: '$$ (11-30)',
+    reservationsNeeded: true,
+    isDeliveryAvailable: true,
+    menuUrl: 'https://example.com/menu',
+    photos: ['https://example.com/photo1.jpg', 'https://example.com/photo2.jpg'],
+
+};
+
+async function createRestaurant() {
+    try {
+        const restaurant = new Restaurant(newRestaurant);
+        const savedRestaurant = await restaurant.save();
+        console.log(savedRestaurant);
+    } catch (error) {
+        throw error;
+    }
+}
+// createRestaurant();
+
+const newHotel = {
+    name: 'New Hotel',
+    category: 'Mid-Range',
+    location: '123 Main Street, Frazer Town',
+    rating: 4.0,
+    website: 'https://hotel-example.com',
+    phoneNumber: '+1234567890',
+    checkInTime: '2:00 PM',
+    checkOutTime: '12:00 PM',
+    amenities: ['Laundry', 'Room Service'],
+    priceRange: '$$$ (31-60)',
+    reservationsNeeded: true,
+    isParkingAvailable: true,
+    isWifiAvailable: true,
+    isPoolAvailable: false,
+    isSpaAvailable: false,
+    isRestaurantAvailable: true,
+    photos: ['https://example.com/hotel-photo1.jpg', 'https://example.com/hotel-photo2.jpg'],
+  };
+  async function createHotel() {
+    try {
+        const hotel = new Hotel(newHotel);
+        const savedHotel = await hotel.save();
+        console.log(savedHotel);
+
+    } catch (error) {
+        throw error;
+    }
+  }
+  createHotel();

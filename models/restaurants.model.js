@@ -8,28 +8,37 @@ const restaurantsSchema = new mongoose.Schema({
     },
     cuisine: [{
         type: String,
-        enum: ["Italian", "Mexican", "Chinese", "Indian", "American", "French","Japanese", "Mediterranean", "Thai", "Vegetarian", "Vegan", "Other"]
+        enum: ["Italian", "Spanish", "Mexican", "Chinese", "Indian", "American", "French","Japanese", "Mediterranean", "Thai", "Vegetarian", "Vegan", "Other"]
     }],
     location: {
         type: String,
         required: true
     },
-    owner: {
+    phone: String,
+    website: String,
+    openHours : String,
+    priceRange: {
+        type: String,
+        enum: ['$ (0-10)', '$$ (11-30)', '$$$ (31-60)', '$$$$ (61+)', 'Other']
+    },
+    reservationsNeeded: {
+        type: Boolean,
+        default: false
+    },
+    isDeliveryAvailable: {
+        type: Boolean,
+        default: false
+    },
+    menuUrl: {
         type: String,
         required: true
     },
-    phone: String,
-    website: String,
-    openingYear: Number,
     rating: {
         type: Number,
         min: 0,
         max: 10,
         default: 0
     },
-    specialDishes: [{
-        type: String
-    }],
     photoUrls: [{
         type: String
     }],
