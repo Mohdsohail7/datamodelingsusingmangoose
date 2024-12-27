@@ -95,18 +95,18 @@ async function bookDataSeed() {
 // bookDataSeed();
 
 const newRestaurant = {
-    name: 'Cha Cha',
-    cuisine: ['Spanish'],
-    location: '123 Main Street, Anytown',
-    rating: 4.0,
-    website: 'https://example.com',
-    phoneNumber: '+1234567890',
-    openHours: 'Mon-Sun: 11:00 AM - 10:00 PM',
-    priceRange: '$$ (11-30)',
+    name: 'Yo China',
+    cuisine: ['Chinese', 'Italian'],
+    location: 'MG Road, Bangalore',
+    rating: 3.9,
+    website: 'https://yo-example.com',
+    phone: '+1288997392',
+    openHours: 'Tue-Sun: 10:00 AM - 11:00 PM',
+    priceRange: '$$$ (31-60)',
     reservationsNeeded: true,
-    isDeliveryAvailable: true,
-    menuUrl: 'https://example.com/menu',
-    photos: ['https://example.com/photo1.jpg', 'https://example.com/photo2.jpg'],
+    isDeliveryAvailable: false,
+    menuUrl: 'https://yo-example.com/menu',
+    photos: ['https://example.com/yo-photo1.jpg', 'https://example.com/yo-photo2.jpg', 'https://example.com/yo-photo3.jpg']
 
 };
 
@@ -119,7 +119,7 @@ async function createRestaurant() {
         throw error;
     }
 }
-// createRestaurant();
+ // createRestaurant();
 
 const newHotel = {
     name: 'New Hotel',
@@ -150,4 +150,67 @@ const newHotel = {
         throw error;
     }
   }
-  createHotel();
+  // createHotel();
+
+  // get all restaurants data from database
+  async function readAllRestaurantsData() {
+    try {
+        const allRestaurants = await Restaurant.find();
+        console.log(allRestaurants);
+    } catch (error) {
+        console.error(error);
+    }
+  }
+  // readAllRestaurantsData();
+
+  async function  restaurantByName(restaurantName) {
+    try {
+        const restaurant = await Restaurant.find({ name: restaurantName});
+        console.log(restaurant);
+    } catch (error) {
+        console.error(error);
+    }
+  }
+  // restaurantByName("Yo China");
+
+  async function restaurantByReservations(reservations) {
+    try {
+        const restaurant = await Restaurant.find({ reservationsNeeded: reservations });
+        console.log(restaurant);
+    } catch (error) {
+        console.error(error);
+    }
+  }
+ // restaurantByReservations("true");
+
+ async function restaurantByDeliveryOffers(delivery) {
+    try {
+        const restaurant = await Restaurant.find({ isDeliveryAvailable: delivery });
+        console.log(restaurant);
+    } catch (error) {
+        console.error(error);
+    }
+  }
+ // restaurantByDeliveryOffers("true");
+
+ async function restaurantByNumber(number) {
+    try {
+        const restaurant = await Restaurant.find({ phone: number });
+        console.log(restaurant);
+    } catch (error) {
+        console.error(error);
+    }
+  }
+  // restaurantByNumber("+1288997392");
+
+  async function restaurantByCuisine(cuisineName) {
+    try {
+        const restaurant = await Restaurant.find({ cuisine: cuisineName });
+        console.log(restaurant);
+    } catch (error) {
+        console.error(error);
+    }
+  }
+  restaurantByCuisine("Italian");
+
+
