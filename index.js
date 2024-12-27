@@ -121,25 +121,25 @@ async function createRestaurant() {
 }
  // createRestaurant();
 
-const newHotel = {
-    name: 'New Hotel',
-    category: 'Mid-Range',
-    location: '123 Main Street, Frazer Town',
-    rating: 4.0,
-    website: 'https://hotel-example.com',
-    phoneNumber: '+1234567890',
-    checkInTime: '2:00 PM',
-    checkOutTime: '12:00 PM',
-    amenities: ['Laundry', 'Room Service'],
-    priceRange: '$$$ (31-60)',
-    reservationsNeeded: true,
-    isParkingAvailable: true,
-    isWifiAvailable: true,
-    isPoolAvailable: false,
-    isSpaAvailable: false,
-    isRestaurantAvailable: true,
-    photos: ['https://example.com/hotel-photo1.jpg', 'https://example.com/hotel-photo2.jpg'],
-  };
+ const newHotel = {
+      name: 'Sunset Resort',
+      category: 'Resort',
+      location: '12 Main Road, Anytown',
+      rating: 4.0,
+      website: 'https://sunset-example.com',
+      phoneNumber: '+1299655890',
+      checkInTime: '2:00 PM',
+      checkOutTime: '11:00 AM',
+      amenities: ['Room Service', 'Horse riding', 'Boating', 'Kids Play Area', 'Bar'],
+      priceRange: '$$$$ (61+)',
+      reservationsNeeded: true,
+      isParkingAvailable: true,
+      isWifiAvailable: true,
+      isPoolAvailable: true,
+      isSpaAvailable: true,
+      isRestaurantAvailable: true,
+      photos: ['https://example.com/hotel2-photo1.jpg', 'https://example.com/hotel2-photo2.jpg'],
+    };
   async function createHotel() {
     try {
         const hotel = new Hotel(newHotel);
@@ -150,7 +150,7 @@ const newHotel = {
         throw error;
     }
   }
-  // createHotel();
+ //  createHotel();
 
   // get all restaurants data from database
   async function readAllRestaurantsData() {
@@ -211,6 +211,89 @@ const newHotel = {
         console.error(error);
     }
   }
-  restaurantByCuisine("Italian");
+  // restaurantByCuisine("Italian");
+
+  // hotel
+  async function readAllHotels() {
+    try {
+        const hotels = await Hotel.find();
+        console.log(hotels);
+    } catch (error) {
+        console.error(error);
+    }
+  }
+// readAllHotels();
+
+const hotelByName = async (hotelName) => {
+    try {
+        const hotel = await Hotel.find({ name: hotelName });
+        console.log(hotel);
+    } catch (error) {
+        console.error(error);
+    }
+}
+// hotelByName("Lake View");
+
+
+const hotelByParkingSpace = async (parking) => {
+    try {
+        const hotel = await Hotel.find({ isParkingAvailable: parking });
+        console.log(hotel);
+    } catch (error) {
+        console.error(error);
+    }
+}
+// hotelByParkingSpace("true");
+
+async function hotelWithRestaurants(rest) {
+    try {
+        const hotel = await Hotel.find({ isRestaurantAvailable: rest});
+        console.log(hotel);
+    } catch (error) {
+        console.error(error);
+    }
+}
+// hotelWithRestaurants("true");
+
+async function hotelByCategory(category) {
+    try {
+        const hotel = await Hotel.find({ category: category });
+        console.log(hotel);
+    } catch (error) {
+        console.error(error);
+    }
+}
+// hotelByCategory("Mid-Range");
+
+async function hotelByPrice(priceRange) {
+    try {
+        const hotel = await Hotel.find({ priceRange: priceRange });
+        console.log(hotel);
+    } catch (error) {
+        console.error(error);
+    }
+}
+// hotelByPrice('$$$$ (61+)');
+
+
+async function hotelByRating(rating) {
+    try {
+        const hotel = await Hotel.find({ rating: rating });
+        console.log(hotel);
+    } catch (error) {
+        console.error(error);
+    }
+}
+// hotelByRating("4.0");
+
+async function hotelByPhoneNumber(number) {
+    try {
+        const hotel = await Hotel.find({ phoneNumber: number });
+        console.log(hotel);
+    } catch (error) {
+        console.error(error);
+    }
+}
+hotelByPhoneNumber('+1299655890');
 
 
