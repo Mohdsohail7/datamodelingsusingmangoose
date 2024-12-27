@@ -294,6 +294,74 @@ async function hotelByPhoneNumber(number) {
         console.error(error);
     }
 }
-hotelByPhoneNumber('+1299655890');
+// hotelByPhoneNumber('+1299655890');
+
+// update data
+// update resturant by its id and update the rating
+async function upatedRestarantRating(restId, dataToUpdate) {
+    try {
+        const updatedRestaurantDetails = await Restaurant.findByIdAndUpdate(restId, dataToUpdate, { new: true });
+        console.log(updatedRestaurantDetails);
+    } catch (error) {
+        console.log("Error in updating data");
+    }
+}
+// upatedRestarantRating("676ea07eff82fdef11ee5bcc", { rating: "4.1"});
+
+async function updateRestaurantName(restName, dataToUpdate) {
+    try {
+        const updateRestaurantDetail = await Restaurant.findOneAndUpdate({ name: restName }, dataToUpdate, { new: true });
+        console.log(updateRestaurantDetail);
+    } catch (error) {
+        console.log("Error in updating data");
+    }
+}
+// updateRestaurantName("Somi", { name: "Som Sarovar" });
+
+
+async function updateRestaurantDelivery(phoneNumber, dataToUpdate) {
+    try {
+        const updateRestaurantDetail = await Restaurant.findOneAndUpdate({ phone: phoneNumber }, dataToUpdate, { new: true });
+        console.log(updateRestaurantDetail)
+    } catch (error) {
+        console.log("Error in updating data");
+    }
+}
+// updateRestaurantDelivery("+1288997392", { isDeliveryAvailable: true });
+
+
+async function hotelCheckOutTimeUpdate(hotelId, dataToUpdate) {
+    try {
+        const updateHotelDetail = await Hotel.findByIdAndUpdate(hotelId, dataToUpdate, { new: true });
+        console.log(updateHotelDetail);
+    } catch (error) {
+        console.log("Error in updating data");
+    }
+}
+// hotelCheckOutTimeUpdate("676eb009600db6696123ce5f", { checkOutTime: "11 AM"});
+
+
+async function updateHotelRating(hotelName, dataToUpdate) {
+    try {
+        const updateHotelDetail = await Hotel.findOneAndUpdate({ name: hotelName }, dataToUpdate, { new: true})
+        console.log(updateHotelDetail);
+    } catch (error) {
+        console.log("Error in updating data");
+    }
+}
+// updateHotelRating("Sunset Resort", { rating: "4.2" });
+
+async function updateHotelNumber(hotelNumber, dataToUpdate) {
+    try {
+        const updateHotelDetail = await Hotel.findOneAndUpdate({ phoneNumber: hotelNumber }, dataToUpdate, { new: true });
+        console.log(updateHotelDetail);
+    } catch (error) {
+        console.log("Error in updating data");
+    }
+}
+updateHotelNumber("+1299655890", { phoneNumber: "+1997687392" });
+
+
+
 
 
