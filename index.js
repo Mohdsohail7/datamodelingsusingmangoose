@@ -359,9 +359,54 @@ async function updateHotelNumber(hotelNumber, dataToUpdate) {
         console.log("Error in updating data");
     }
 }
-updateHotelNumber("+1299655890", { phoneNumber: "+1997687392" });
+// updateHotelNumber("+1299655890", { phoneNumber: "+1997687392" });
 
 
+// delete restaurant by id
+async function deleteRestaurantById(restId) {
+    try {
+        const deletedRestaurant = await Restaurant.findByIdAndDelete(restId);
+        console.log("Restaurant was deleted.", deletedRestaurant);
+    } catch (error) {
+        console.log("Error in deleting data.", error);
+    }
+}
+// deleteRestaurantById("676d802998359c2cc0b43149");
+
+// restaurant delete by name
+async function deleteRestaurantByName(restName) {
+    try {
+        const deletedRestaurant = await Restaurant.findOneAndDelete({ name: restName });
+        console.log("Restaurant was deleted.", deletedRestaurant);
+    } catch (error) {
+        console.log("Error in deleting restaurant.", error);
+    }
+}
+// deleteRestaurantByName("Yo China");
+
+
+// hotel delete by id
+async function deleteHotelById(hotelId) {
+    try {
+        const deletedHotel = await Hotel.findByIdAndDelete(hotelId);
+        console.log("Hotel was deleted.", deletedHotel);
+    } catch (error) {
+        console.log("Error in deleting hotel", error);
+    }
+}
+// deleteHotelById("676d874b92a3e9ab47400a92");
+
+
+// hotel delete by phoneNumber
+async function deleteHotelByPhoneNumber(phoneNumber) {
+    try {
+        const deletedHotel = await Hotel.findOneAndDelete({ phoneNumber: phoneNumber });
+        console.log("Hotel was deleted.", deletedHotel);
+    } catch (error) {
+        console.log("Error in deleting  hotel.", error);
+    }
+}
+deleteHotelByPhoneNumber("+1234555890");
 
 
 
