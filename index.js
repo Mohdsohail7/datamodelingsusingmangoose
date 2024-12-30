@@ -1,3 +1,6 @@
+const express = require("express");
+const app = express();
+
 const { dbConnect } = require("./db/db.connect");
 // const fs = require("fs");
 const Movie = require("./models/movie.model");
@@ -7,7 +10,7 @@ const Restaurant = require("./models/restaurants.model");
 const Hotel = require("./models/hotel.model");
 
 dbConnect();
-
+app.use(express.json());
 // const jsonData = fs.readFileSync("movies.json", "utf-8");
 // const moviesData = JSON.parse(jsonData);
 
@@ -110,68 +113,109 @@ const newRestaurant = {
 
 };
 
-async function createRestaurant() {
+async function createRestaurant(newRestaurant) {
     try {
         const restaurant = new Restaurant(newRestaurant);
         const savedRestaurant = await restaurant.save();
-        console.log(savedRestaurant);
+        // console.log(savedRestaurant);
+        return savedRestaurant;
     } catch (error) {
         throw error;
     }
 }
- // createRestaurant();
+ app.post("/restaurants", async (req, res) => {
+    try {
+        const newRestaurantData = req.body;
+        const restaurant = await createRestaurant(newRestaurantData);
+        return res.status(201).json({message: "New Restaurant Created.", restaurant: restaurant});
+    } catch (error) {
+        return res.status(500).json({message: "Internal Server Error.", error: error});
+    }
+ });
 
- const newHotel = {
-      name: 'Sunset Resort',
-      category: 'Resort',
-      location: '12 Main Road, Anytown',
-      rating: 4.0,
-      website: 'https://sunset-example.com',
-      phoneNumber: '+1299655890',
-      checkInTime: '2:00 PM',
-      checkOutTime: '11:00 AM',
-      amenities: ['Room Service', 'Horse riding', 'Boating', 'Kids Play Area', 'Bar'],
-      priceRange: '$$$$ (61+)',
-      reservationsNeeded: true,
-      isParkingAvailable: true,
-      isWifiAvailable: true,
-      isPoolAvailable: true,
-      isSpaAvailable: true,
-      isRestaurantAvailable: true,
-      photos: ['https://example.com/hotel2-photo1.jpg', 'https://example.com/hotel2-photo2.jpg'],
-    };
-  async function createHotel() {
+//  const newHotel = {
+//       name: 'Sunset Resort',
+//       category: 'Resort',
+//       location: '12 Main Road, Anytown',
+//       rating: 4.0,
+//       website: 'https://sunset-example.com',
+//       phoneNumber: '+1299655890',
+//       checkInTime: '2:00 PM',
+//       checkOutTime: '11:00 AM',
+//       amenities: ['Room Service', 'Horse riding', 'Boating', 'Kids Play Area', 'Bar'],
+//       priceRange: '$$$$ (61+)',
+//       reservationsNeeded: true,
+//       isParkingAvailable: true,
+//       isWifiAvailable: true,
+//       isPoolAvailable: true,
+//       isSpaAvailable: true,
+//       isRestaurantAvailable: true,
+//       photos: ['https://example.com/hotel2-photo1.jpg', 'https://example.com/hotel2-photo2.jpg'],
+//     };
+  async function createHotel(newHotel) {
     try {
         const hotel = new Hotel(newHotel);
         const savedHotel = await hotel.save();
-        console.log(savedHotel);
+        // console.log(savedHotel);
+        return savedHotel;
 
     } catch (error) {
         throw error;
     }
   }
- //  createHotel();
+  app.post("/hotels", async (req, res) => {
+    try {
+        const newHotelData = req.body;
+        const hotel = await createHotel(newHotelData);
+        return res.status(201).json({message: "New Hotel Created.", hotel: hotel});
+    } catch (error) {
+        return res.status(500).json({message: "Internal Server Error.", error: error});
+    }
+ });
 
   // get all restaurants data from database
   async function readAllRestaurantsData() {
     try {
         const allRestaurants = await Restaurant.find();
-        console.log(allRestaurants);
+        // console.log(allRestaurants);
+        return allRestaurants;
     } catch (error) {
         console.error(error);
     }
   }
-  // readAllRestaurantsData();
+  app.get("/restaurants", async (req, res) => {
+    try {
+        const restaurants = await readAllRestaurantsData();
+        if (!restaurants) {
+            return res.status(404).json({ message: "restaurants not found."});
+        }
+        return res.status(200).json({ restaurants: restaurants });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+  });
 
   async function  restaurantByName(restaurantName) {
     try {
         const restaurant = await Restaurant.find({ name: restaurantName});
-        console.log(restaurant);
+        // console.log(restaurant);
+        return restaurant;
     } catch (error) {
         console.error(error);
     }
   }
-  // restaurantByName("Yo China");
+  app.get("/restaurants/:restaurantName", async (req, res) => {
+    try {
+        const restName = req.params.restaurantName;
+        const result = await restaurantByName(restName);
+        if (!result) {
+            return res.status(404).json({ message: "restaurant not found by this name."});
+        }
+        return res.status(200).json({ restaurant: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+  })
 
   async function restaurantByReservations(reservations) {
     try {
@@ -196,43 +240,109 @@ async function createRestaurant() {
  async function restaurantByNumber(number) {
     try {
         const restaurant = await Restaurant.find({ phone: number });
-        console.log(restaurant);
+        // console.log(restaurant);
+        return restaurant;
     } catch (error) {
         console.error(error);
     }
   }
-  // restaurantByNumber("+1288997392");
+  app.get("/restaurants/directory/:phoneNumber", async (req, res) => {
+    try {
+        const number = req.params.phoneNumber;
+        const result = await restaurantByNumber(number);
+        if (!result) {
+            return res.status(404).json({ message: "restaurant not found by this number."});
+        }
+        return res.status(200).json({ restaurant: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+  })
 
   async function restaurantByCuisine(cuisineName) {
     try {
         const restaurant = await Restaurant.find({ cuisine: cuisineName });
-        console.log(restaurant);
+        // console.log(restaurant);
+        return restaurant;
     } catch (error) {
         console.error(error);
     }
   }
-  // restaurantByCuisine("Italian");
+  app.get("/restaurants/cuisine/:cuisineName", async (req, res) => {
+    try {
+        const cuisine = req.params.cuisineName;
+        const result = await restaurantByCuisine(cuisine);
+        if (!result) {
+            return res.status(404).json({ message: "Restaurant not found by cuisine."});
+        }
+        return res.status(200).json({ restaurant: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+  });
+
+  async function restaurantByLocation(location) {
+    try {
+        const restaurant = await Restaurant.find( { location: location });
+        return restaurant;
+    } catch (error) {
+        throw error;
+    }
+  }
+  app.get("/restaurants/location/:restaurantLocation", async(req, res) => {
+    try {
+        const location = req.params.restaurantLocation;
+        const result = await restaurantByLocation(location);
+        if (!result) {
+            return res.status(404).json({ message: "restaurant not found by this location."});
+        }
+        return res.status(200).json({ restaurant: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+  })
 
   // hotel
   async function readAllHotels() {
     try {
         const hotels = await Hotel.find();
-        console.log(hotels);
+        return hotels;
     } catch (error) {
         console.error(error);
     }
   }
-// readAllHotels();
+  app.get("/hotels", async (req, res) => {
+    try {
+        const hotels = await readAllHotels();
+        if (!hotels) {
+            return res.status(404).json({ message: "hotels not found."});
+        }
+        return res.status(200).json({ hotels: hotels });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+  });
 
 const hotelByName = async (hotelName) => {
     try {
         const hotel = await Hotel.find({ name: hotelName });
-        console.log(hotel);
+        return hotel
     } catch (error) {
         console.error(error);
     }
 }
-// hotelByName("Lake View");
+app.get("/hotels/:hotelName", async (req, res) => {
+    try {
+        const hotelName = req.params.hotelName;
+        const result = await hotelByName(hotelName);
+        if (!result) {
+            return res.status(404).json({ message: "hotel not found by this name."});
+        }
+        return res.status(200).json({ hotel: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+  })
 
 
 const hotelByParkingSpace = async (parking) => {
@@ -258,12 +368,24 @@ async function hotelWithRestaurants(rest) {
 async function hotelByCategory(category) {
     try {
         const hotel = await Hotel.find({ category: category });
-        console.log(hotel);
+        // console.log(hotel);
+        return hotel;
     } catch (error) {
         console.error(error);
     }
 }
-// hotelByCategory("Mid-Range");
+app.get("/hotels/category/:hotelCategory", async (req, res) => {
+    try {
+        const category = req.params.hotelCategory;
+        const result = await hotelByCategory(category);
+        if (!result) {
+            return res.status(404).json({ message: "hotel not found by this category."});
+        }
+        return res.status(200).json({ hotel: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+  })
 
 async function hotelByPrice(priceRange) {
     try {
@@ -279,34 +401,70 @@ async function hotelByPrice(priceRange) {
 async function hotelByRating(rating) {
     try {
         const hotel = await Hotel.find({ rating: rating });
-        console.log(hotel);
+        // console.log(hotel);
+        return hotel;
     } catch (error) {
         console.error(error);
     }
 }
-// hotelByRating("4.0");
+app.get("/hotels/rating/:hotelRating", async (req, res) => {
+    try {
+        const rating = req.params.hotelRating;
+        const result = await hotelByRating(rating);
+        if (!result) {
+            return res.status(404).json({ message: "hotel not found by this rating."});
+        }
+        return res.status(200).json({ hotel: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+  })
 
 async function hotelByPhoneNumber(number) {
     try {
         const hotel = await Hotel.find({ phoneNumber: number });
-        console.log(hotel);
+        // console.log(hotel);
+        return hotel;
     } catch (error) {
         console.error(error);
     }
 }
-// hotelByPhoneNumber('+1299655890');
+app.get("/hotels/directory/:phoneNumber", async (req, res) => {
+    try {
+        const number = req.params.phoneNumber;
+        const result = await hotelByPhoneNumber(number);
+        if (!result) {
+            return res.status(404).json({ message: "hotel not found by this number."});
+        }
+        return res.status(200).json({ hotel: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+  })
 
 // update data
 // update resturant by its id and update the rating
-async function upatedRestarantRating(restId, dataToUpdate) {
+async function upatedRestarantById(restId, dataToUpdate) {
     try {
-        const updatedRestaurantDetails = await Restaurant.findByIdAndUpdate(restId, dataToUpdate, { new: true });
-        console.log(updatedRestaurantDetails);
+        const updatedRestaurantDetails = await Restaurant.findByIdAndUpdate(restId, {cuisine: dataToUpdate }, { new: true });
+        // console.log(updatedRestaurantDetails);
+        return updatedRestaurantDetails;
     } catch (error) {
         console.log("Error in updating data");
     }
 }
-// upatedRestarantRating("676ea07eff82fdef11ee5bcc", { rating: "4.1"});
+app.post("/restaurants/update-cuisine", async (req, res) => {
+    try {
+        const { id, cuisine } = req.body;
+        const result = await upatedRestarantById(id, cuisine);
+        if (!result) {
+            return res.status(404).json({ message: "cuisine not updated."});
+        }
+        return res.status(200).json({ messgae: "cuisine updated successfully.", restaurant: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+})
 
 async function updateRestaurantName(restName, dataToUpdate) {
     try {
@@ -361,17 +519,51 @@ async function updateHotelNumber(hotelNumber, dataToUpdate) {
 }
 // updateHotelNumber("+1299655890", { phoneNumber: "+1997687392" });
 
+async function upatedHotelRatingById(hotelId, dataToUpdate) {
+    try {
+        const updatedHotelDetails = await Hotel.findByIdAndUpdate(hotelId, {rating: dataToUpdate }, { new: true });
+        // console.log(updatedRestaurantDetails);
+        return updatedHotelDetails;
+    } catch (error) {
+        console.log("Error in updating data");
+    }
+}
+app.post("/hotels/update-rating", async (req, res) => {
+    try {
+        const { id, rating } = req.body;
+        const result = await upatedHotelRatingById(id, rating);
+        if (!result) {
+            return res.status(404).json({ message: "rating not updated."});
+        }
+        return res.status(200).json({ messgae: "rating updated successfully.", hotel: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+})
+
 
 // delete restaurant by id
 async function deleteRestaurantById(restId) {
     try {
         const deletedRestaurant = await Restaurant.findByIdAndDelete(restId);
-        console.log("Restaurant was deleted.", deletedRestaurant);
+        // console.log("Restaurant was deleted.", deletedRestaurant);
+        return deletedRestaurant;
     } catch (error) {
         console.log("Error in deleting data.", error);
     }
 }
-// deleteRestaurantById("676d802998359c2cc0b43149");
+app.post("/restaurants/:restaurantId", async (req, res) => {
+    try {
+        const restId = req.params.restaurantId;
+        const result = await deleteRestaurantById(restId);
+        if (!result){
+            return res.status(404).json({ message: "resturant could not deleted."});
+        }
+        return res.status(200).json({ message: "Restaurant deleted. successfully.", restaurant: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+})
 
 // restaurant delete by name
 async function deleteRestaurantByName(restName) {
@@ -389,12 +581,24 @@ async function deleteRestaurantByName(restName) {
 async function deleteHotelById(hotelId) {
     try {
         const deletedHotel = await Hotel.findByIdAndDelete(hotelId);
-        console.log("Hotel was deleted.", deletedHotel);
+        // console.log("Hotel was deleted.", deletedHotel);
+        return deletedHotel;
     } catch (error) {
         console.log("Error in deleting hotel", error);
     }
 }
-// deleteHotelById("676d874b92a3e9ab47400a92");
+app.post("/hotels/:hotelId", async (req, res) => {
+    try {
+        const hotelId = req.params.hotelId;
+        const result = await deleteHotelById(hotelId);
+        if (!result){
+            return res.status(404).json({ message: "hotel could not deleted."});
+        }
+        return res.status(200).json({ message: "Hotel deleted. successfully.", hotel: result });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error.", error: error });
+    }
+})
 
 
 // hotel delete by phoneNumber
@@ -406,7 +610,12 @@ async function deleteHotelByPhoneNumber(phoneNumber) {
         console.log("Error in deleting  hotel.", error);
     }
 }
-deleteHotelByPhoneNumber("+1234555890");
+// deleteHotelByPhoneNumber("+1234555890");
+
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running at port is ${PORT}`);
+});
 
 
 
